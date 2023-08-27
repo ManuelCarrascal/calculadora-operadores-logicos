@@ -1,27 +1,28 @@
 import { SYMBOL, WHITESPACE } from './regex.js';
 
-export function evalExpr(t, b) {
-  function e(e) {
-    const r = t[e];
-    if (Array.isArray(r)) return evalExpr(r, b);
-    assertBoolean(b[r]);
-    return b[r];
+export function evalExpr(tokens, valoresBooleanos) {
+  function expression(tokensExpresion) {
+    const valorResultado = tokens[tokensExpresion];
+    if (Array.isArray(valorResultado))
+      return evalExpr(valorResultado, valoresBooleanos);
+    assertBoolean(valoresBooleanos[valorResultado]);
+    return valoresBooleanos[valorResultado];
   }
-  if (!t) throw new SyntaxError('Expresión inválida: ' + t);
-  if (!Array.isArray(t)) return b[t];
-  switch (t[0]) {
+  if (!tokens) throw new SyntaxError('Expresión inválida: ' + tokens);
+  if (!Array.isArray(tokens)) return valoresBooleanos[tokens];
+  switch (tokens[0]) {
     case '^':
-      return e(1) && e(2);
+      return expression(1) && expression(2);
     case '∨':
-      return e(1) || e(2);
+      return expression(1) || expression(2);
     case '→':
-      return !e(1) || e(2);
+      return !expression(1) || expression(2);
     case '↔':
-      return e(1) === e(2);
+      return expression(1) === expression(2);
     case '¬':
-      return !e(1);
+      return !expression(1);
     default:
-      throw new SyntaxError('Operador no reconocido: ' + t[0]);
+      throw new SyntaxError('Operador no reconocido: ' + tokens[0]);
   }
 }
 
@@ -43,9 +44,9 @@ export function truthCombinations(symbols) {
   if (!key) {
     return [{}];
   }
-  const tmp = { ...symbols };
-  delete tmp[key];
-  const prev = truthCombinations(tmp);
+  const temporal = { ...symbols };
+  delete temporal[key];
+  const prev = truthCombinations(temporal);
   const ret = [];
   for (const prevComb of prev) {
     ret.push({ ...prevComb, [key]: true });
@@ -90,35 +91,35 @@ export function binaryExpr() {
 }
 
 function implicationExpr() {
-  const a1 = equivalenceExpr();
+  const expressionConditional = equivalenceExpr();
   if (getCurToken() === '→') {
-    return [consumeToken(), a1, implicationExpr()];
+    return [consumeToken(), expressionConditional, implicationExpr()];
   }
-  return a1;
+  return expressionConditional;
 }
 
 function equivalenceExpr() {
-  const a1 = orExpr();
+  const expressionConditional = orExpr();
   if (getCurToken() === '↔') {
-    return [consumeToken(), a1, equivalenceExpr()];
+    return [consumeToken(), expressionConditional, equivalenceExpr()];
   }
-  return a1;
+  return expressionConditional;
 }
 
 function orExpr() {
-  const a1 = andExpr();
+  const expressionConditional = andExpr();
   if (getCurToken() === '∨') {
-    return [consumeToken(), a1, orExpr()];
+    return [consumeToken(), expressionConditional, orExpr()];
   }
-  return a1;
+  return expressionConditional;
 }
 
 function andExpr() {
-  const a1 = subExpr();
+  const expressionConditional = subExpr();
   if (getCurToken() === '^') {
-    return [consumeToken(), a1, andExpr()];
+    return [consumeToken(), expressionConditional, andExpr()];
   }
-  return a1;
+  return expressionConditional;
 }
 
 function subExpr() {
