@@ -1,62 +1,81 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-    <link rel="stylesheet" href="./css/styles.css" />
+    <title>Genrador de tablas de verdad</title>
+    <link rel="icon" type="image/png" href="favicon-32x32.png" sizes="32x32" />
+    <link rel="icon" type="image/png" href="favicon-16x16.png" sizes="16x16" />
+    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/9.4.4/math.min.js"></script>
+    <link rel="stylesheet" href="./css/styles.css" />
   </head>
   <body>
-    <form action="" class="flex items-center justify-center" id="form">
-      <input
-        type="text"
-        class="w-64 px-4 py-2 mr-2 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-        id="expresion"
-      />
-      <button
-        type="button"
-        id="button__and"
-        class="px-4 py-2 mr-2 text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-      >
-        ˄
-      </button>
-      <button
-        type="button"
-        id="button__or"
-        class="px-4 py-2 mr-2 text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-      >
-        v
-      </button>
-      <button
-        type="button"
-        id="button__negacion"
-        class="px-4 py-2 mr-2 text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-      >
-        ¬
-      </button>
-      <button
-        type="button"
-        id="button__entonces"
-        class="px-4 py-2 mr-2 text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-      >
-        →
-      </button>
-      <button
-        type="button"
-        id="button__doble"
-        class="px-4 py-2 mr-2 text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-      >
-        ↔
-      </button>
-      <input
-        type="submit"
-        value="="
-        class="px-4 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-      />
-    </form>
-    <div class="container__tabla" id="tabla"></div>
-    <script src="./js/app.js"></script>
+    <header class="flex justify-center my-5 flex-col items-center">
+      <h1 class="text-3xl font-bold text-gray-800 text-center">
+        Generador de tablas de verdad
+      </h1>
+      <div class="my-5 flex flex-col items-center">
+        <input
+          type="text"
+          id="expr"
+          class="input px-4 py-2 mr-2 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          placeholder="Escribe una expresión lógica"
+        />
+        <div class="container__buttons my-4">
+          <button
+            type="button"
+            id="button__and"
+            class="button px-4 py-2 mr-2 my-2 text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+          >
+            ˄
+          </button>
+          <button
+            type="button"
+            id="button__or"
+            class="button px-4 py-2 mr-2 my-2 text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+          >
+            ∨
+          </button>
+          <button
+            type="button"
+            id="button__negacion"
+            class="button px-4 py-2 mr-2 my-2 text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+          >
+            ¬
+          </button>
+          <button
+            type="button"
+            id="button__entonces"
+            class="button px-4 py-2 mr-2 my-2 text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+          >
+            →
+          </button>
+          <button
+            type="button"
+            id="button__doble"
+            class="button px-4 py-2 mr-2 my-2 text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+          >
+            ↔
+          </button>
+          <button
+            type="button"
+            id="button__openingParenthesis"
+            class="button px-4 py-2 mr-2 my-2 text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+          >
+            (
+          </button>
+          <button
+            type="button"
+            id="button__closingParenthesis"
+            class="button px-4 py-2 mr-2 my-2 text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+          >
+            )
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <div id="container__table"></div>
+    <script src="./js/app.js" type="module"></script>
   </body>
 </html>
