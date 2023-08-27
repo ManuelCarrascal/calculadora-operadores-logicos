@@ -1,15 +1,14 @@
 import { SYMBOL, WHITESPACE } from './regex.js';
 
-export function evalExpr(tokens, valoresBooleanos) {
+export function evalExpr(tokens, BooleanValues) {
   function expression(tokensExpresion) {
-    const valorResultado = tokens[tokensExpresion];
-    if (Array.isArray(valorResultado))
-      return evalExpr(valorResultado, valoresBooleanos);
-    assertBoolean(valoresBooleanos[valorResultado]);
-    return valoresBooleanos[valorResultado];
+    const resultValue = tokens[tokensExpresion];
+    if (Array.isArray(resultValue)) return evalExpr(resultValue, BooleanValues);
+    assertBoolean(BooleanValues[resultValue]);
+    return BooleanValues[resultValue];
   }
   if (!tokens) throw new SyntaxError('Expresión inválida: ' + tokens);
-  if (!Array.isArray(tokens)) return valoresBooleanos[tokens];
+  if (!Array.isArray(tokens)) return BooleanValues[tokens];
   switch (tokens[0]) {
     case '^':
       return expression(1) && expression(2);
@@ -55,21 +54,21 @@ export function truthCombinations(symbols) {
   return ret;
 }
 
-let pos;
+let position;
 let symbols;
 let tokens;
 
 function getCurToken() {
-  return tokens[pos];
+  return tokens[position];
 }
 function consumeToken(expected) {
   const curTok = getCurToken();
   if (expected && curTok !== expected) {
-    console.log(
+    throw new SyntaxError(
       `No se encontró el token esperado. Esperado: "${expected}" Actual: "${curTok}".`
     );
   }
-  pos++;
+  position++;
   return curTok;
 }
 
@@ -140,7 +139,7 @@ export function parse(tok) {
     return [];
   }
   tokens = tok;
-  pos = 0;
+  position = 0;
   symbols = {};
   const ret = expr();
 
